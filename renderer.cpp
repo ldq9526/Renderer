@@ -1,6 +1,6 @@
 #include <GL/glut.h>
 
-GLfloat angle = 0.f;
+GLint angle = 0;
 /* light parameters */
 GLfloat light_ambient[] = { 0.5f,0.5f,0.5f,1.f };
 GLfloat light_diffuse[] = { 1.f,1.f,1.f,1.f };
@@ -47,17 +47,28 @@ void display()
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, material_diffuse);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, material_specular);
 	glMaterialf(GL_FRONT, GL_SHININESS, 1.f);
-	glutSolidTeapot(2);
+	glutSolidTeapot(3);
 	glPopMatrix();
 	glutSwapBuffers();
 }
 
-void idle()
+void keyboard(unsigned char key,int x,int y)
 {
-	angle += 0.02f;
-	if (angle >= 360.f)
-		angle -= 360.f;
-	glutPostRedisplay();
+	if (key == 't')
+	{
+		angle = (angle + 5) % 360;
+		glutPostRedisplay();
+	}
+	else if (key == 'T')
+	{
+		angle = (angle - 5) % 360;
+		glutPostRedisplay();
+	}
+	else if (key == 'r' || key == 'R')
+	{
+		angle = 0;
+		glutPostRedisplay();
+	}
 }
 
 int main(int argc,char **argv)
@@ -69,8 +80,8 @@ int main(int argc,char **argv)
 	glutCreateWindow("OpenGL");
 	initialize();
 	glutReshapeFunc(reshape);
-	glutIdleFunc(idle);
 	glutDisplayFunc(display);
+	glutKeyboardFunc(keyboard);
 	glutMainLoop();
 	return 0;
 }
